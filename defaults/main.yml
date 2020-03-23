@@ -3,3 +3,4 @@ raspberry_user: pi
 dns_server1: 8.8.8.8
 dns_server2: 8.8.4.4
 pihole_admin_password: random
+custom_env_vars: []
