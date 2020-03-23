@@ -38,6 +38,11 @@
   wait_for:
     timeout: 60
 
+- name: provide custom environment variables
+  template:
+    src: pihole.env.j2
+    dest: "{{ ansible_user_dir}}/etc-pihole.env"
+
 - name: Ensure pihole docker container is running
   become: yes
   docker_container:
@@ -55,6 +60,7 @@
     volumes:
     - ./etc-pihole/:/etc/pihole/
     - ./etc-dnsmasq.d/:/etc/dnsmasq.d/
+    env_file: "{{ ansible_user_dir}}/etc-pihole.env"
     env:
       DNS1: '{{ dns_server1 }}'
       DNS2: '{{ dns_server2 }}'
