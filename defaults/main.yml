@@ -5,3 +5,21 @@ dns_server1: 8.8.8.8
 dns_server2: 8.8.4.4
 pihole_admin_password: random
 custom_env_vars: []
+
+# Configure dsnmasq with custom templates. The format here is a list of maps,
+# with "src" and "name" keys. The name will be created in the pi-hole server's
+# /etc/dnsmasq.d directory
+#
+# For example:
+#
+# pihole_dnsmasq_templates:
+#   - src: additional_local_subnets.conf.j2
+#     name: 05-local-subnets.conf
+pihole_dnsmasq_templates: []
+
+# Optionally support conditional forwarding. If this is set to a mapping, it'll
+# be used to enable the CONDITIONAL_FORWARDING parts of the pihole config. For
+# example:
+# pihole_conditional_forwarding:
+#   router_ip: 10.0.0.1
+#   domain: example.com

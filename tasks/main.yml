@@ -62,3 +62,44 @@
       DNS1: '{{ dns_server1 }}'
       DNS2: '{{ dns_server2 }}'
       WEBPASSWORD: "{{ pihole_admin_password }}"
+
+
+- name: Install custom templates
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ ansible_user_dir }}/etc-dnsmasq.d/{{ item.name }}"
+  with_items: "{{ pihole_dnsmasq_templates }}"
+
+- name: add LAN forwarding to pi-hole setup - enable
+  lineinfile:
+    path: "{{ ansible_user_dir }}/etc-pihole/setupVars.conf"
+    regexp: "^CONDITIONAL_FORWARDING=(.*)"
+    line: "CONDITIONAL_FORWARDING=true"
+  notify: restart pihole container
+  when: pihole_conditional_forwarding is defined and pihole_conditional_forwarding|length > 0
+
+- name: add LAN forwarding to pi-hole setup - ip
+  lineinfile:
+    path: "{{ ansible_user_dir }}/etc-pihole/setupVars.conf"
+    regexp: "^CONDITIONAL_FORWARDING_IP=(.*)"
+    line: "CONDITIONAL_FORWARDING_IP={{ pihole_conditional_forwarding.router_ip }}"
+  notify: restart pihole container
+  when: pihole_conditional_forwarding is defined and pihole_conditional_forwarding|length > 0
+
+- name: add LAN forwarding to pi-hole setup - domain
+  lineinfile:
+    path: "{{ ansible_user_dir }}/etc-pihole/setupVars.conf"
+    regexp: "^CONDITIONAL_FORWARDING_DOMAIN=(.*)"
+    line: "CONDITIONAL_FORWARDING_DOMAIN={{ pihole_conditional_forwarding.domain }}"
+  notify: restart pihole container
+  when: pihole_conditional_forwarding is defined and pihole_conditional_forwarding|length > 0
+
+- name: add LAN forwarding to pi-hole setup - reverse
+  lineinfile:
+    path: "{{ ansible_user_dir }}/etc-pihole/setupVars.conf"
+    regexp: "^CONDITIONAL_FORWARDING_REVERSE=(.*)"
+    # this line reverses the router IP provided
+    line: "CONDITIONAL_FORWARDING_REVERSE={{ pihole_conditional_forwarding.router_ip.split('.')[-2::-1]|join('.') }}.in-addr.arpa"
+  notify: restart pihole container
+  when: pihole_conditional_forwarding is defined and pihole_conditional_forwarding|length > 0
+
