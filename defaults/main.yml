@@ -1,6 +1,7 @@
 ---
 raspberry_user: pi
 pihole_docker_tag: latest
+pihole_pull: no
 dns_server1: 8.8.8.8
 dns_server2: 8.8.4.4
 pihole_admin_password: random

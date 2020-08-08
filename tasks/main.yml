@@ -46,7 +46,8 @@
     name: pihole
     image: "pihole/pihole:{{ pihole_docker_tag }}"
     state: started
-    restart: no
+    restart: "{{ pihole_pull }}"
+    pull: "{{ pihole_pull }}"
     restart_policy: unless-stopped
     ports:
     - '53:53/udp' #dns
